@@ -75,7 +75,7 @@ localhost | SUCCESS => {
      - setup:
 ```
 ## playbookを実行
-`$ ansible-playbook -i inventory/hosts playbook.yml`
+`$ ansible-playbook -i inventory/inventory.ini playbook.yml`
 ```
 
 PLAY [ansible_master] **********************************************************************************
@@ -88,4 +88,42 @@ ok: [localhost]
 
 PLAY RECAP *******************************************************************************************
 localhost                  : ok=2    changed=0    unreachable=0    failed=0
+```
+
+## Hostsを増やす
+`vi inventory/inventory.ini`
+```
+++++編集内容++++
+[ansible_client]
+x.x.x.x # 実行対象のIPアドレスを追記
++++++++++++++++
+```
+
+## 追加した対象に公開鍵を追加
+```
+$ ssh-copy-id x.x.x.x
+The authenticity of host 'x.x.x.x (x.x.x.x)' can't be established.
+ECDSA key fingerprint is 9f:35:e3:db:b4:1a:b3:02:10:02:e4:ca:79:0c:67:d8.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+vagrant@x.x.x.x's password:(パスワードを入力して、Enter
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'x.x.x.x'"
+and check to make sure that only the key(s) you wanted were added.
+```
+
+## pingモジュールを実行
+```
+$ ansible -i inventory/inventory.ini all -m ping
+x.x.x.x | SUCCESS => {    # 先程追加した対象に対しても実施されている
+    "changed": false,
+    "ping": "pong"
+}
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
 ```
