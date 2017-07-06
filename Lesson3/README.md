@@ -86,4 +86,5 @@ It Worksと表示されればOK
 
 ## 冪等性を確かめる
 `$ ansible-playbook web.yml -i inventory/inventory.ini`
+
 上記のコマンドを複数回実行しても、正常完了する。
